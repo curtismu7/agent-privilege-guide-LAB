@@ -24,3 +24,17 @@
 /* An expanded box (the kit's .dk-open) is wider and its details read left to right. */
 .pat-node.dk-open { min-width: 18rem; max-width: 22rem; text-align: left; font-weight: 400; }
 .pat-node.dk-open .dk-passport { font-weight: 400; }
+
+/* Role chips: every box says what it is in the story — actor (only sends), outcome (only receives), or a pass-through named by its group. */
+.pat-role { display: block; margin: 0 0 4px; padding: 1px 7px; border-radius: 999px; border: 1px solid var(--th-border-strong); background: var(--th-bg-inset); color: var(--th-text-muted); font-size: 10px; font-weight: 600; letter-spacing: 0.02em; }
+.pat-node { padding-top: 12px; }
+.pat-role--actor { border-color: var(--th-status-info); color: var(--th-status-info); background: var(--th-status-info-bg); }
+.pat-role--outcome { border-color: var(--th-status-success, var(--th-accent)); color: var(--th-status-success, var(--th-accent)); background: var(--th-status-success-bg, var(--th-bg-inset)); }
+
+/* Group legend under the canvas: one coloured chip per group, matching the box colours. */
+.pat-legend { display: inline-block; margin-right: 6px; padding: 1px 8px; border-radius: 999px; font-size: 10px; font-weight: 600; border: 1px solid var(--th-status-info); background: var(--th-status-info-bg); color: var(--th-text); }
+.pat-legend--dark { border-color: var(--th-border-strong); background: var(--th-bg-inset); }
+.pat-legend--grey { border-color: var(--th-border-strong); background: var(--th-bg-inset); }
+.pat-legend--red { border-color: var(--th-status-danger); background: var(--th-status-danger-bg); }
+.pat-legend--green { border-color: var(--th-status-success); background: var(--th-status-success-bg); }
+.pat-legend--amber { border-color: var(--th-status-warning); background: var(--th-status-warning-bg); }

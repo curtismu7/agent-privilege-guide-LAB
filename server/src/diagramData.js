@@ -18,10 +18,19 @@ export const rawDiagram = (name = DIAGRAM_NAMES[0]) => DOCS[name];
 
 export function buildDiagram(cast, name = DIAGRAM_NAMES[0]) {
   const d = fillDeep(DOCS[name] || DOCS[DIAGRAM_NAMES[0]], cast);
+  // A box with no incoming arrows only acts; a box with no outgoing arrows is an endpoint.
+  // The role goes into `sub` (a short line under the label) and the group label into the title
+  // attribute, so the box explains itself at a glance, not only when clicked.
+  const out = new Set(), inn = new Set();
+  for (const e of d.edges) { out.add(e.source); inn.add(e.target); }
   return {
     title: d.title,
     intro: d.lede,
-    nodes: d.nodes.map((n) => ({ id: n.id, label: n.label, kind: n.group, x: n.x, y: n.y, ...(n.sub ? { sub: n.sub } : {}) })),
+    groups: Object.fromEntries(Object.entries(d.groups).map(([k, g]) => [k, g.label])),
+    nodes: d.nodes.map((n) => {
+      const role = !inn.has(n.id) ? `${d.groups[n.group]?.label ?? n.group} — acts` : !out.has(n.id) ? `${d.groups[n.group]?.label ?? n.group} — outcome` : d.groups[n.group]?.label ?? n.group;
+      return { id: n.id, label: n.label, kind: n.group, x: n.x, y: n.y, role, ...(n.sub ? { sub: n.sub } : {}) };
+    }),
     steps: d.steps.map((s) => { const e = d.edges[s.edges[0]]; return { from: e.source, to: e.target, label: s.title, say: s.what }; }),
   };
 }

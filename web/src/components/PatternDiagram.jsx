@@ -13,14 +13,20 @@ const FIT = { padding: 0.08 };
 const HANDLES = [["t", Position.Top], ["b", Position.Bottom], ["l", Position.Left], ["r", Position.Right]];
 
 function Box({ data }) {
+  // role: "<group label>" for a box arrows pass through, "<group> — acts" for a box that only sends,
+  // "<group> — outcome" for a box that only receives. Rendered as a chip so the at-a-glance reading
+  // is "this box is an actor / this box is the answer / this box is both", not "this box is isolated".
+  const role = data.role || "";
+  const roleClass = role.endsWith("— acts") ? "pat-role--actor" : role.endsWith("— outcome") ? "pat-role--outcome" : "";
   return (
-    <div className={`pat-node pat-node--${data.kind}${data.on ? " pat-node--on" : ""}${data.passport ? " dk-open" : ""}`} data-testid={`pat-node-${data.id}`}>
+    <div className={`pat-node pat-node--${data.kind}${data.on ? " pat-node--on" : ""}${data.passport ? " dk-open" : ""}`} data-testid={`pat-node-${data.id}`} title={role || undefined}>
       {HANDLES.map(([k, pos]) => (
         <span key={k}>
           <Handle id={`s-${k}`} type="source" position={pos} className="pat-handle" />
           <Handle id={`t-${k}`} type="target" position={pos} className="pat-handle" />
         </span>
       ))}
+      {role && <span className={`pat-role ${roleClass}`} data-testid={`pat-role-${data.id}`}>{role}</span>}
       {data.label}
       {data.sub?.map((s, i) => <span key={i} className="pat-node__sub">{s}</span>)}
       {data.passport && <Passport p={data.passport} />}
@@ -52,7 +58,7 @@ function Canvas({ pattern, graph, positions, onMove, stepper, open, setOpen }) {
   const active = stepper.step >= 0 ? pattern.steps[stepper.step] : null;
   const nodes = pattern.nodes.map((n) => ({
     id: n.id, type: "box", position: positions[n.id], draggable: true, zIndex: n.id === open ? 10 : undefined, // an expanded box sits above its neighbours
-    data: { id: n.id, label: n.label, sub: n.sub, kind: n.kind, on: !!active && (active.from === n.id || active.to === n.id), passport: n.id === open ? boxPassport(graph, n.id) : null },
+    data: { id: n.id, label: n.label, sub: n.sub, kind: n.kind, role: n.role, on: !!active && (active.from === n.id || active.to === n.id), passport: n.id === open ? boxPassport(graph, n.id) : null },
   }));
   const offs = labelOffsets(pattern.steps);
   const edges = pattern.steps.map((s, i) => {
@@ -123,6 +129,12 @@ export default function PatternDiagram({ pattern, resetSignal = 0 }) {
       <ReactFlowProvider>
         <Canvas pattern={pattern} graph={graph} positions={positions} onMove={onMove} stepper={stepper} open={open} setOpen={setOpen} />
       </ReactFlowProvider>
+      <p className="keys" data-testid="pattern-legend">
+        {pattern.groups && Object.entries(pattern.groups).map(([k, label]) => (
+          <span key={k} className={`pat-legend pat-legend--${k}`}>{label}</span>
+        ))}
+        {" · "}actors start arrows, outcomes receive them, the rest pass a call through
+      </p>
       <p className="keys">Drag any box. Mock-issued token values; hosts are examples. Moved: {Object.keys(positions).filter((k) => positions[k].x !== initial[k].x || positions[k].y !== initial[k].y).length} box(es).</p>
     </section>
   );
