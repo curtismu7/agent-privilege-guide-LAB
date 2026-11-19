@@ -38,3 +38,10 @@
 .pat-legend--red { border-color: var(--th-status-danger); background: var(--th-status-danger-bg); }
 .pat-legend--green { border-color: var(--th-status-success); background: var(--th-status-success-bg); }
 .pat-legend--amber { border-color: var(--th-status-warning); background: var(--th-status-warning-bg); }
+
+/* The numbered arrows explained: one card per number, matching the canvas labels ("1. Mint the key"). */
+.pat-steps { list-style: none; margin: 12px 0 0; padding: 0; }
+.pat-step h3 { display: flex; align-items: center; margin: 0 0 4px; }
+.pat-step p { margin: 0; font-size: var(--font-size-sm); color: var(--th-text-muted); }
+.pat-step--now { border-color: var(--th-accent); box-shadow: inset 0 -3px 0 var(--th-accent); }
+.pat-step--ahead { opacity: 0.55; }

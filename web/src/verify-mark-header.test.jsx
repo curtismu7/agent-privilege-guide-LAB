@@ -150,7 +150,7 @@ describe("compare tab", () => {
     const compareTab = [...screen.getAllByRole("link")].find((a) => a.textContent === "Compare all five");
     await user.click(compareTab);
     const grid = await screen.findByTestId("compare-grid");
-    expect(within(grid).getByText("1. Agent Registry")).toBeTruthy();
+    expect(within(grid).getByText("Agent Registry")).toBeTruthy();
     // all audience: workforce text and use-when shown
     expect(within(grid).getByText("use when onboarding agents")).toBeTruthy();
     // switch to CIAM: the pitch line for CIAM appears, the section stays but is marked

@@ -150,28 +150,28 @@ function SectionPage({ section, resetSignal }) {
     <section data-testid={`tab-${section.id}`}>
       <div className="panel">
         <p className="section-label">Section {section.n} · {section.tagline}</p>
-        <h1>{section.name}</h1>
+        <h1><span className="step-num" aria-hidden="true">{section.n}</span>{section.name}</h1>
         <p className="intro">{section.what}</p>
       </div>
-      <div className="card-grid">
+      <div className="duo">
         <div className="card">
-          <h3>What it can do</h3>
+          <h3><span className="step-num" aria-hidden="true">{section.n}.1</span>What it can do</h3>
           <ul className="facts">
             {section.can.map((c, i) => <li key={i}>{c}</li>)}
           </ul>
         </div>
         <div className="card">
-          <h3>Use when</h3>
+          <h3><span className="step-num" aria-hidden="true">{section.n}.2</span>Use when</h3>
           <p>{section.useWhen}</p>
           {(section.dontUseWhen || section.caveat) && (
             <>
-              <h3>{section.dontUseWhen ? "Don't use when" : "Caveat"}</h3>
+              <h3><span className="step-num" aria-hidden="true">{section.n}.3</span>{section.dontUseWhen ? "Don't use when" : "Caveat"}</h3>
               <p>{section.dontUseWhen || section.caveat}</p>
             </>
           )}
         </div>
       </div>
-      <div className="card-grid">
+      <div className="duo">
         <div className={`card${section.workforceWeight === "core" ? " card--ok" : ""}`}>
           <h3>Workforce</h3>
           <p>{section.workforce}</p>
@@ -194,21 +194,23 @@ function MentalModel({ story, resetSignal }) {
         <h1>Mental model</h1>
         <p className="intro">{mm.intro}</p>
       </div>
-      <div className="card-grid">
+      <div className="duo">
         {mm.layers.map((l) => (
           <div className="card" key={l.n}>
-            <h3>{l.n}. {l.name}</h3>
+            <h3><span className="step-num" aria-hidden="true">{l.n}</span>{l.name}</h3>
             <p>{l.text}</p>
           </div>
         ))}
       </div>
       <SectionDiagram name={mm.diagram} resetSignal={resetSignal} />
-      <div className="panel">
-        <h2>Terminology</h2>
-        <p>{story.terminology}</p>
+      <div className="duo">
+        <div className="panel">
+          <h2><span className="step-num" aria-hidden="true">5</span>Terminology</h2>
+          <p>{story.terminology}</p>
+        </div>
       </div>
       <div className="panel">
-        <h2>Workforce vs CIAM</h2>
+        <h2><span className="step-num" aria-hidden="true">6</span>Workforce vs CIAM</h2>
         <table>
           <thead>
             <tr>{story.summaryTable.columns.map((c, i) => <th key={i}>{c}</th>)}</tr>
@@ -224,7 +226,7 @@ function MentalModel({ story, resetSignal }) {
           </tbody>
         </table>
       </div>
-      <div className="card-grid">
+      <div className="duo">
         {story.pitches.map((p) => (
           <div className="card card--neutral" key={p.audience}>
             <h3>{p.audience}</h3>

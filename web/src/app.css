@@ -136,3 +136,19 @@ button[aria-pressed="true"]:hover:not(:disabled) { background: var(--accent-deep
 .compare-card h3 { margin: 0 0 4px; font-size: 1rem; }
 .compare-card p { margin: 6px 0; }
 .compare-card--na { opacity: 0.75; }
+
+/* .card and .card-grid: the guide's paired panels. The class names existed in JSX without CSS - unstyled divs until now. */
+.card { border: 1px solid var(--th-border); background: var(--th-bg-card); border-radius: var(--radius-lg); padding: 12px 14px; min-width: 0; }
+.card h3 { margin: 0 0 6px; font-size: var(--font-size-base); }
+.card p { margin: 6px 0; }
+.card-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); align-items: start; margin: 8px 0; }
+.card--ok { border-color: var(--status-ok); }
+.card--neutral { background: var(--th-bg-inset); }
+
+/* Numbered-story pattern (AI-DEMO-Standalone/UI-RELAYOUT-PATTERN.md): .step-num badge + full-width stacks. */
+.step-num { display: inline-grid; place-items: center; min-width: 22px; height: 22px; border-radius: 50%;
+  background: var(--accent-gradient); color: var(--on-accent); font: 700 var(--font-size-2xs) var(--font-mono);
+  margin-right: 8px; vertical-align: 2px; }
+.duo { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 8px 0; align-items: start; }
+.hops-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; margin-top: 12px; }
+@media (max-width: 900px) { .duo, .hops-grid, .card-grid { grid-template-columns: 1fr; } .compare-grid { grid-template-columns: 1fr; } }

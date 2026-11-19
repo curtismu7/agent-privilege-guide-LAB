@@ -41,7 +41,7 @@ export default function Compare({ story }) {
           if (ciamOnly) {
             return (
               <div key={s.id} className="card compare-card compare-card--na" data-testid={`compare-${s.id}`}>
-                <h3>{s.n}. {s.name}</h3>
+                <h3><span className="step-num" aria-hidden="true">{s.n}</span>{s.name}</h3>
                 <p className="tag tag--warn">Not applicable in CIAM</p>
                 <p className="muted">{s.ciam}</p>
               </div>
@@ -49,7 +49,7 @@ export default function Compare({ story }) {
           }
           return (
             <div key={s.id} className="card compare-card" data-testid={`compare-${s.id}`}>
-              <h3>{s.n}. {s.name}</h3>
+              <h3><span className="step-num" aria-hidden="true">{s.n}</span>{s.name}</h3>
               <p className="muted">{s.tagline}</p>
               {audience !== "ciam" && <p>{s.workforce}</p>}
               {audience === "all" && <p><strong>Use when.</strong> {s.useWhen}</p>}

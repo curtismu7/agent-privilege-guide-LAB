@@ -129,6 +129,14 @@ export default function PatternDiagram({ pattern, resetSignal = 0 }) {
       <ReactFlowProvider>
         <Canvas pattern={pattern} graph={graph} positions={positions} onMove={onMove} stepper={stepper} open={open} setOpen={setOpen} />
       </ReactFlowProvider>
+      <ol className="hops-grid pat-steps" data-testid="pattern-steps">
+        {pattern.steps.map((s, i) => (
+          <li key={i} className={`card pat-step${stepper.step === i ? " pat-step--now" : ""}${stepper.step >= 0 && i > stepper.step ? " pat-step--ahead" : ""}`}>
+            <h3><span className="step-num" aria-hidden="true">{i + 1}</span>{s.label}</h3>
+            <p>{s.say}</p>
+          </li>
+        ))}
+      </ol>
       <p className="keys" data-testid="pattern-legend">
         {pattern.groups && Object.entries(pattern.groups).map(([k, label]) => (
           <span key={k} className={`pat-legend pat-legend--${k}`}>{label}</span>
