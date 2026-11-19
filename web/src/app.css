@@ -130,3 +130,9 @@ button[aria-pressed="true"]:hover:not(:disabled) { background: var(--accent-deep
 .search-group > h2 { font-size: var(--font-size-lg); margin: 0 0 4px; }
 .search code[data-testid="kql"] { overflow-wrap: anywhere; white-space: pre-wrap; }
 .search input[type="text"] { min-width: 0; flex: 1 1 12ch; }
+
+/* Compare page: one card per console section, responsive grid. */
+.compare-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-4); margin: var(--space-4) 0; }
+.compare-card h3 { margin: 0 0 4px; font-size: 1rem; }
+.compare-card p { margin: 6px 0; }
+.compare-card--na { opacity: 0.75; }

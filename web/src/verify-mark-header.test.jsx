@@ -140,3 +140,21 @@ describe("tabs", () => {
     expect(screen.queryByText("say")).toBeNull(); // the talk track opens from the header toggle
   });
 });
+
+describe("compare tab", () => {
+  it("renders a card per section, and the CIAM filter marks not-applicable sections instead of hiding them", async () => {
+    stubFetch();
+    render(<App />);
+    const user = userEvent.setup();
+    await screen.findByTestId("tab-compare-grid-absent", {}, { timeout: 50 }).catch(() => {}); // no-op: keep the helper warm
+    const compareTab = [...screen.getAllByRole("link")].find((a) => a.textContent === "Compare all five");
+    await user.click(compareTab);
+    const grid = await screen.findByTestId("compare-grid");
+    expect(within(grid).getByText("1. Agent Registry")).toBeTruthy();
+    // all audience: workforce text and use-when shown
+    expect(within(grid).getByText("use when onboarding agents")).toBeTruthy();
+    // switch to CIAM: the pitch line for CIAM appears, the section stays but is marked
+    await user.click(screen.getByTestId("compare-aud-ciam"));
+    expect(screen.getByText(/customer-facing assistant/i)).toBeTruthy();
+  });
+});

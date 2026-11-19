@@ -3,6 +3,7 @@ import TopMenu from "./top-menu/TopMenu.jsx";
 import Banner from "./components/Banner.jsx";
 import DiagramTab from "./components/DiagramTab.jsx";
 import TalkTrack from "./components/TalkTrack.jsx";
+import Compare from "./components/Compare.jsx";
 import ShelfLink from "./components/ShelfLink.jsx";
 import ReleaseNotes from "./components/ReleaseNotes.jsx";
 import VerifyMark from "./components/VerifyMark.jsx";
@@ -12,6 +13,7 @@ import { workspaceId } from "./workspace";
 
 const TABS = [
   { id: "mental-model", label: "Mental model" },
+  { id: "compare", label: "Compare all five" },
   { id: "agent-registry", label: "Agent Registry" },
   { id: "agentic-apps", label: "Agentic Apps" },
   { id: "federated-identity", label: "Federated Identity" },
@@ -108,6 +110,7 @@ export default function App() {
         <Banner story={story} mode={info?.mode} />
         <p className="keys">Workspace {workspaceId()} · everything simulated · no tenant, no outbound network</p>
         {tab === "mental-model" && <MentalModel story={story} resetSignal={resetSignal} />}
+        {tab === "compare" && <Compare story={story} />}
         {section && <SectionPage section={section} resetSignal={resetSignal} />}
         {tab === "diagram" && <section data-testid="tab-diagram"><DiagramTab names={DIAGRAM_NAMES} resetSignal={resetSignal} /></section>}
         {tab === "facts" && (
