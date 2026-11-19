@@ -1,0 +1,40 @@
+{
+  "schema": "diagram-studio/1",
+  "id": "apg-agent-registry",
+  "title": "One key is the agent",
+  "lede": "Agent Registry mints an agent access key: one credential that IS the agent. Scopes, allowed models, RPM/TPM/budget, expiry, guardrail and reachable apps all hang off the key. No sign-in, no token exchange.",
+  "groups": {
+    "human": { "label": "The human side", "color": "dark" },
+    "console": { "label": "Agent Registry", "color": "blue" },
+    "agent": { "label": "The agent", "color": "green" },
+    "gateway": { "label": "The AI Gateway", "color": "amber" },
+    "outcome": { "label": "Outcome", "color": "red" }
+  },
+  "nodes": [
+    { "id": "custodian", "label": "Custodian (human)", "group": "human", "x": 60, "y": 140, "sub": ["policy is issued to them", "inactive account = key stops working"] },
+    { "id": "console", "label": "Mint the key", "group": "console", "x": 300, "y": 240, "sub": ["scopes: llm / mcp / a2a", "allowed models, RPM/TPM, budget", "expiry, guardrail, custodian"] },
+    { "id": "apps", "label": "Select Agentic Apps", "group": "console", "x": 300, "y": 420, "sub": ["selecting apps IS the grant", "saving auto-creates a policy", "MCP grant can list tools; rest refused"] },
+    { "id": "llm", "label": "LLM provider door", "group": "gateway", "x": 300, "y": 60, "sub": ["one provider per key", "Privilege holds the real provider key", "agent holds a virtual key only"] },
+    { "id": "agent", "label": "The agent", "group": "agent", "x": 600, "y": 240, "sub": ["Authorization: Bearer <key>", "no sign-in, no token exchange"] },
+    { "id": "gateway", "label": "Agentless gateway", "group": "gateway", "x": 820, "y": 240, "sub": ["checks scope, app, rate, budget", "per-key AI Guard step"] },
+    { "id": "allow", "label": "Allowed", "group": "outcome", "x": 1030, "y": 160 },
+    { "id": "refuse", "label": "Refused", "group": "outcome", "x": 1030, "y": 340, "sub": ["no grant for this app/tool", "over rate or budget", "key revoked or expired"] }
+  ],
+  "edges": [
+    { "source": "custodian", "target": "console", "label": "answers for the agent" },
+    { "source": "console", "target": "apps", "label": "grant by selection" },
+    { "source": "console", "target": "llm", "label": "virtual LLM key" },
+    { "source": "agent", "target": "gateway", "label": "Bearer <key>" },
+    { "source": "apps", "target": "gateway", "label": "what it may reach" },
+    { "source": "llm", "target": "gateway", "label": "provider key injected server-side" },
+    { "source": "gateway", "target": "allow", "label": "in scope, under caps" },
+    { "source": "gateway", "target": "refuse", "label": "outside the grant", "dashed": true }
+  ],
+  "steps": [
+    { "title": "Mint the identity", "what": "The key is minted with scopes (llm / mcp / a2a), allowed models, RPM/TPM and budget caps, expiry, a guardrail and a custodian — the named human the agent acts as. If the custodian's account goes inactive, the key stops working.", "edges": [0] },
+    { "title": "The grant comes from selection", "what": "Selecting Agentic Apps on the key is the grant: saving auto-creates a policy. For MCP apps the grant can list tools; the other tools are hidden and refused.", "edges": [1, 4] },
+    { "title": "LLM keys hold a virtual key", "what": "One provider per key, with a model allowlist and rate/budget caps. Privilege holds the real provider key and injects it server-side, so the agent only ever holds a virtual key.", "edges": [2, 5] },
+    { "title": "The agent calls with the key", "what": "The agent sends Authorization: Bearer <key> — no sign-in, no token exchange. The key IS the agent.", "edges": [3] },
+    { "title": "The gateway checks everything", "what": "Scope, app and tool against the grant, rate and budget caps enforced natively, and the per-key AI Guard runtime step. Revoke (Revoked: true) is the instant non-destructive kill.", "edges": [6, 7] }
+  ]
+}

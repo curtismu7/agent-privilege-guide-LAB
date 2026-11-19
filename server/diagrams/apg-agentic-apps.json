@@ -1,0 +1,39 @@
+{
+  "schema": "diagram-studio/1",
+  "id": "apg-agentic-apps",
+  "title": "Agentic Apps: the doors",
+  "lede": "Agentic Apps is the resource layer — the things agents reach: registered MCP apps (/<app>/mcp), A2A agents, and LLM providers fronted by the AI Gateway. You cannot issue a grant without an app to point at.",
+  "groups": {
+    "owner": { "label": "The customer's estate", "color": "dark" },
+    "app": { "label": "Agentic Apps", "color": "blue" },
+    "backends": { "label": "Behind the doors", "color": "green" },
+    "agents": { "label": "The agents", "color": "amber" }
+  },
+  "nodes": [
+    { "id": "mcp", "label": "MCP app", "group": "app", "x": 400, "y": 80, "sub": ["/<app>/mcp", "tool list, guardrails"] },
+    { "id": "a2a", "label": "A2A agent", "group": "app", "x": 400, "y": 240, "sub": ["/<app>/a2a/...", "auth mode: Static Token", "or Pass Agent Token"] },
+    { "id": "llm", "label": "LLM provider", "group": "app", "x": 400, "y": 400, "sub": ["fronted by the AI Gateway"] },
+    { "id": "aggregate", "label": "Aggregate app", "group": "app", "x": 120, "y": 240, "sub": ["compose several backends", "behind one door"] },
+    { "id": "backend1", "label": "Internal MCP server", "group": "backends", "x": 700, "y": 80 },
+    { "id": "backend2", "label": "Partner A2A agent", "group": "backends", "x": 700, "y": 240 },
+    { "id": "backend3", "label": "Model provider", "group": "backends", "x": 700, "y": 400 },
+    { "id": "registry", "label": "Key holder", "group": "agents", "x": 100, "y": 560, "sub": ["the grant points here"] },
+    { "id": "fed", "label": "Federated agent", "group": "agents", "x": 300, "y": 560 }
+  ],
+  "edges": [
+    { "source": "aggregate", "target": "mcp", "label": "one door, many backends", "dashed": true },
+    { "source": "mcp", "target": "backend1", "label": "proxied" },
+    { "source": "a2a", "target": "backend2", "label": "proxied" },
+    { "source": "llm", "target": "backend3", "label": "provider key injected" },
+    { "source": "registry", "target": "mcp", "label": "grant: per app, per tool" },
+    { "source": "registry", "target": "a2a", "label": "grant: per app" },
+    { "source": "fed", "target": "mcp", "label": "policy + required claims" },
+    { "source": "fed", "target": "llm", "label": "policy + required claims" }
+  ],
+  "steps": [
+    { "title": "Register a door", "what": "Register MCP servers and A2A agents behind the agentless gateway, with auth modes (Static Token vs Pass Agent Token), tool lists and guardrails.", "edges": [1, 2] },
+    { "title": "Aggregate if the surface sprawls", "what": "An aggregate app composes several backends behind one door, so one grant can cover a whole composed surface.", "edges": [0, 1] },
+    { "title": "LLM providers are apps too", "what": "Model providers sit behind the AI Gateway. Privilege holds the real provider key and injects it server-side; the agent's key is virtual.", "edges": [3] },
+    { "title": "Every grant needs an app", "what": "A key or federated identity is authorized per-app (and per-tool) — always by pointing at an app. No app, no grant. That is why this is section 2 of the console.", "edges": [4, 5, 6, 7] }
+  ]
+}

@@ -1,0 +1,223 @@
+{
+  "schema": "demo-content-pack/1",
+  "id": "agent-privilege-guide",
+  "title": "Agent Privilege Field Guide",
+  "version": "0.1.0",
+  "demo": {
+    "id": "agent-privilege-guide",
+    "name": "Agent Privilege Field Guide",
+    "catalog": "D134",
+    "baseUrl": "http://localhost:7826",
+    "doctor": "/api/health",
+    "tags": [
+      "pingone-privilege",
+      "ai-agent-security",
+      "agent-governance",
+      "nonhuman-identity",
+      "mock-only"
+    ]
+  },
+  "glossary": [
+    {
+      "id": "mental-model",
+      "term": "Three-layer mental model",
+      "definition": "Identity: What the agent is. An agent access key (Agent Registry) or a federated/workload identity (Federated Identity). No identity, no call. Grant: What the agent may reach. Created automatically when you select an Agentic App on a key, or authored as a policy (pacpolicys) for federated identities. Scoped to MCP tools, A2A agents, or LLM providers/models. Guardrail: What screens the agent's traffic. Per-key AI Guard, runtime protection, and the sensor/enforcement layer for discovered agents. Discovery: What agents exist that you don't control. Self-Hosted Agents and AI Platform Agents find them and attach enforcement.",
+      "aliases": [
+        "layers"
+      ]
+    },
+    {
+      "id": "agent-access-key",
+      "term": "Agent access key",
+      "definition": "One credential that IS the agent: scopes, allowed models, rate/budget caps, expiry, guardrail and reachable apps hang off the key; sent as a Bearer header, no sign-in, no token exchange.",
+      "aliases": [
+        "access-key",
+        "agent key"
+      ]
+    },
+    {
+      "id": "agentic-apps",
+      "term": "Agentic Apps",
+      "definition": "The resource layer: MCP servers, A2A agents and LLM providers registered behind the agentless gateway. Selecting an app on a key IS the grant — you cannot issue a grant without an app to point at.",
+      "aliases": [
+        "resource layer"
+      ]
+    },
+    {
+      "id": "federated-identity",
+      "term": "Federated Identity",
+      "definition": "A secretless agent identity: a platform-issued JWT (k8s, CI, SPIFFE, PingFederate) with issuer, audience, subject pinning, lifetime cap and required claims — the new display name for NonHumanIdentity (NHI).",
+      "aliases": [
+        "NHI",
+        "NonHumanIdentity",
+        "workload identity"
+      ]
+    },
+    {
+      "id": "self-hosted-agents",
+      "term": "Self-Hosted Agents",
+      "definition": "Discovery and enforcement for agents in your own infrastructure: a sensor finds shadow agents and attaches allow/deny/step-up policies.",
+      "aliases": [
+        "sensor"
+      ]
+    },
+    {
+      "id": "ai-platform-agents",
+      "term": "AI Platform Agents",
+      "definition": "Discovery and control for agents inside third-party AI platforms (Copilot-class), at the boundary where they cross into your estate.",
+      "aliases": [
+        "platform agents"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "field-guide",
+      "title": "Field guide \"Agent Privilege — When to Use What\" (and the Ping deck \"ID4AI Workforce - H2 2026\")",
+      "url": "https://field-guide.invalid/agent-privilege",
+      "kind": "product-doc",
+      "use": "The five console sections, their capabilities and the Workforce/CIAM mapping.",
+      "status": "read",
+      "checked": "2026-11-18"
+    }
+  ],
+  "cards": [
+    {
+      "id": "concept-mental-model",
+      "label": "Start: the three layers (plus discovery)",
+      "description": "Three layers, and every \"it doesn't work\" ticket is a mismatch between two of them. Then, above the layers you control yourself, discovery finds what you didn't onboard.",
+      "group": "concept",
+      "action": {
+        "type": "route",
+        "href": "/#mental-model"
+      },
+      "terms": [
+        "mental-model"
+      ]
+    },
+    {
+      "id": "section-agent-registry",
+      "label": "1. Agent Registry — Agent access keys",
+      "description": "You are building or onboarding your own agents and want governed access to models, MCP servers, and A2A agents — the default starting point for nearly every agent deployment.",
+      "group": "concept",
+      "action": {
+        "type": "route",
+        "href": "/#agent-registry"
+      },
+      "terms": [
+        "agent-access-key"
+      ],
+      "story": "S01"
+    },
+    {
+      "id": "section-agentic-apps",
+      "label": "2. Agentic Apps — The resource layer — the doors",
+      "description": "You are exposing any MCP server, A2A agent, or LLM provider to agents — you cannot issue a grant without an app to point at.",
+      "group": "concept",
+      "action": {
+        "type": "route",
+        "href": "/#agentic-apps"
+      },
+      "terms": [
+        "agentic-apps"
+      ],
+      "story": "S02"
+    },
+    {
+      "id": "section-federated-identity",
+      "label": "3. Federated Identity — Secretless agents (NonHumanIdentity)",
+      "description": "The agent already has a platform identity you trust (k8s pod, CI job, PF-issued token), security requires zero static credentials, or you need claim-level binding (which key, which repo, which human delegated). The default for anything Kubernetes- or CI-hosted.",
+      "group": "concept",
+      "action": {
+        "type": "route",
+        "href": "/#federated-identity"
+      },
+      "terms": [
+        "federated-identity"
+      ],
+      "story": "S03"
+    },
+    {
+      "id": "section-self-hosted-agents",
+      "label": "4. Self-Hosted Agents — Discovery & enforcement for your own estate",
+      "description": "The customer has agents running in their own VMs, containers, or clusters that weren't onboarded through the registry — the \"find and control what's already there\" motion.",
+      "group": "concept",
+      "action": {
+        "type": "route",
+        "href": "/#self-hosted-agents"
+      },
+      "terms": [
+        "self-hosted-agents"
+      ],
+      "story": "S04"
+    },
+    {
+      "id": "section-ai-platform-agents",
+      "label": "5. AI Platform Agents — Discovery & control for platform-hosted agents",
+      "description": "The customer has adopted external AI platforms (Copilot-class tools, SaaS agent builders) and wants visibility and control over what those agents do against enterprise resources.",
+      "group": "concept",
+      "action": {
+        "type": "route",
+        "href": "/#ai-platform-agents"
+      },
+      "terms": [
+        "ai-platform-agents"
+      ],
+      "story": "S05"
+    },
+    {
+      "id": "ref-facts",
+      "label": "Facts and what is UNVERIFIED",
+      "description": "Every claim carries a status: measured, inferred or UNVERIFIED.",
+      "group": "reference",
+      "action": {
+        "type": "route",
+        "href": "/#facts"
+      }
+    },
+    {
+      "id": "ref-doctor",
+      "label": "Doctor and health",
+      "description": "Preflight checks and the demo-health/1 endpoint.",
+      "group": "setup",
+      "action": {
+        "type": "route",
+        "href": "/api/health"
+      }
+    }
+  ],
+  "stories": [
+    {
+      "id": "S01",
+      "title": "Agent Registry",
+      "say": "The place you mint an agent's identity. An access key is one credential that IS the agent: scopes (llm / mcp / a2a), allowed models, RPM/TPM/budget, expiry, guardrail, and reachable apps all hang off the key. The agent sends Authorization: Bearer <key> — no sign-in, no token exchange."
+    },
+    {
+      "id": "S02",
+      "title": "Agentic Apps",
+      "say": "The resource layer — the things agents reach: registered MCP apps (/<app>/mcp), A2A agents (/<app>/a2a/...), and LLM providers fronted by the AI Gateway."
+    },
+    {
+      "id": "S03",
+      "title": "Federated Identity",
+      "say": "An external token issuer an agent authenticates against instead of holding a key: expected iss, mandatory aud bound to a specific door, subject pinning, JWKS URI, max token lifetime, and required claims. The agent presents a platform-issued JWT (Kubernetes service account, GitHub Actions OIDC token, SPIFFE, PingFederate-issued token…); there is no secret to leak, rotate, or accidentally commit."
+    },
+    {
+      "id": "S04",
+      "title": "Self-Hosted Agents",
+      "say": "Discovery and enforcement for agents you run yourself in your own infrastructure. A sensor (Docker or Kubernetes) discovers agent activity in the environment, reports it to Privilege, and enforces policies on it."
+    },
+    {
+      "id": "S05",
+      "title": "AI Platform Agents",
+      "say": "Discovery and control for agents running inside third-party AI platforms (hosted copilots, managed agent runtimes) — workloads whose identity and runtime belong to a platform, not to the customer's infrastructure."
+    }
+  ],
+  "documents": [
+    {
+      "id": "talk-track",
+      "path": "docs/talk-track.md",
+      "title": "Talk track (generated from the story data)"
+    }
+  ]
+}

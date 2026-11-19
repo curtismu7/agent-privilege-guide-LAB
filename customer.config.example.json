@@ -1,0 +1,9 @@
+{
+  "_readme": "Copy to customer.config.json (git-ignored) to brand the lab. Only these four cast values are read; everything else is ignored. They fill the {{castBrand}}/{{castAgentId}}/{{castClientId}}/{{castHost}} tokens in the page text (brand: display name; agentId/clientId/host: lowercase letters, digits and dashes; host names the example agent host, kept off real networks by the reserved-host scan). Overrides the retail/health/finance vertical values.",
+  "cast": {
+    "brand": "Northwind Retail",
+    "agentId": "orders-agent",
+    "clientId": "orders-agent",
+    "host": "northwind"
+  }
+}

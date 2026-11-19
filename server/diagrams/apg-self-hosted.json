@@ -1,0 +1,37 @@
+{
+  "schema": "diagram-studio/1",
+  "id": "apg-self-hosted",
+  "title": "Self-Hosted Agents: find and control what's already there",
+  "lede": "Discovery and enforcement for agents you run yourself in your own infrastructure. A sensor (Docker or Kubernetes) discovers agent activity, reports it to Privilege, and enforces policies on it — including shadow agents nobody registered.",
+  "groups": {
+    "estate": { "label": "Your infrastructure", "color": "dark" },
+    "sensor": { "label": "The sensor", "color": "amber" },
+    "console": { "label": "Self-Hosted Agents", "color": "blue" },
+    "policy": { "label": "Enforcement", "color": "red" }
+  },
+  "nodes": [
+    { "id": "vm", "label": "VMs, containers, clusters", "group": "estate", "x": 60, "y": 200, "sub": ["agents nobody onboarded", "and registered ones"] },
+    { "id": "shadow", "label": "Shadow agent", "group": "estate", "x": 60, "y": 400, "sub": ["built by a team, never registered"] },
+    { "id": "sensor", "label": "Sensor (Docker / Kubernetes)", "group": "sensor", "x": 320, "y": 240, "sub": ["discovers agent activity", "mints its own signing key", "workload-identity-backed where possible"] },
+    { "id": "console", "label": "Report to Privilege", "group": "console", "x": 580, "y": 240, "sub": ["surface discovered agents", "for governance"] },
+    { "id": "policy", "label": "SENSOR-ENFORCEMENT-POLICIES", "group": "policy", "x": 840, "y": 160, "sub": ["allow / deny / step-up", "on what discovered agents may do"] },
+    { "id": "enforce", "label": "Enforcement attached", "group": "policy", "x": 840, "y": 360, "sub": ["the sensor enforces locally"] },
+    { "id": "register", "label": "Onboard into Agent Registry", "group": "console", "x": 580, "y": 440, "sub": ["the governed path once found"] }
+  ],
+  "edges": [
+    { "source": "vm", "target": "sensor", "label": "activity observed" },
+    { "source": "shadow", "target": "sensor", "label": "discovered too" },
+    { "source": "sensor", "target": "console", "label": "report" },
+    { "source": "console", "target": "policy", "label": "policy per agent" },
+    { "source": "console", "target": "enforce", "label": "attach" },
+    { "source": "sensor", "target": "enforce", "label": "enforces" },
+    { "source": "console", "target": "register", "label": "govern it properly", "dashed": true }
+  ],
+  "steps": [
+    { "title": "A sensor watches your estate", "what": "A sensor deployed in Docker or Kubernetes discovers agent activity in the environment — including agents nobody registered.", "edges": [0, 1] },
+    { "title": "Shadow agents surface", "what": "Agents found by discovery, not onboarding, are surfaced for governance. Shadow AI in the corporate estate is a workforce-security problem, which is why this section is almost purely workforce.", "edges": [1, 2] },
+    { "title": "Policies attach to what was found", "what": "SENSOR-ENFORCEMENT-POLICIES attach allow/deny/step-up decisions on what discovered agents may do; the sensor enforces them locally.", "edges": [3, 4, 5] },
+    { "title": "The sensor's own identity", "what": "The sensor mints a signing key of its own, backed by workload identity where possible — it is itself an agent caller that needs an identity.", "edges": [2] },
+    { "title": "From discovered to governed", "what": "The happy ending is onboarding: once surfaced, an agent can be registered in Agent Registry with a custodian, a grant and a guardrail like any other.", "edges": [6] }
+  ]
+}

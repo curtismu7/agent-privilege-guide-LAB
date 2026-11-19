@@ -1,0 +1,37 @@
+{
+  "schema": "diagram-studio/1",
+  "id": "apg-ai-platform-agents",
+  "title": "AI Platform Agents: control at the boundary",
+  "lede": "Discovery and control for agents running inside third-party AI platforms — hosted copilots, managed agent runtimes. Identity and runtime belong to the platform, not your infrastructure; you control what those agents do when they cross into your estate.",
+  "groups": {
+    "platform": { "label": "Third-party AI platforms", "color": "dark" },
+    "console": { "label": "AI Platform Agents", "color": "blue" },
+    "boundary": { "label": "Your boundary", "color": "red" },
+    "estate": { "label": "Inside your estate", "color": "green" }
+  },
+  "nodes": [
+    { "id": "copilot", "label": "Hosted copilot", "group": "platform", "x": 60, "y": 120, "sub": ["identity owned by the platform"] },
+    { "id": "builder", "label": "SaaS agent builder", "group": "platform", "x": 60, "y": 300, "sub": ["managed agent runtimes"] },
+    { "id": "activity", "label": "Agent activity", "group": "platform", "x": 300, "y": 200, "sub": ["emitted by the platforms"] },
+    { "id": "console", "label": "Discover + bring under policy", "group": "console", "x": 540, "y": 200, "sub": ["same policy model as everything else"] },
+    { "id": "gateway", "label": "AI Gateway door", "group": "boundary", "x": 780, "y": 200, "sub": ["tools, data, models", "via the gateway"] },
+    { "id": "tools", "label": "Enterprise tools", "group": "estate", "x": 1010, "y": 100 },
+    { "id": "data", "label": "Enterprise data", "group": "estate", "x": 1010, "y": 220 },
+    { "id": "user", "label": "Acting for a user", "group": "boundary", "x": 780, "y": 380, "sub": ["CIAM-adjacent: user context rides on the call"] }
+  ],
+  "edges": [
+    { "source": "copilot", "target": "activity", "label": "emits" },
+    { "source": "builder", "target": "activity", "label": "emits" },
+    { "source": "activity", "target": "console", "label": "discovered" },
+    { "source": "console", "target": "gateway", "label": "what it may reach" },
+    { "source": "gateway", "target": "tools", "label": "screened" },
+    { "source": "gateway", "target": "data", "label": "screened" },
+    { "source": "copilot", "target": "user", "label": "on behalf of an end user", "dashed": true }
+  ],
+  "steps": [
+    { "title": "Platform agents emit activity", "what": "Hosted copilots and managed agent runtimes emit agent activity that Privilege can discover — the workloads themselves live outside your control.", "edges": [0, 1, 2] },
+    { "title": "One policy model for all of it", "what": "Discovered platform agents are brought under the same policy model as everything else, so control does not fork between agent origins.", "edges": [3] },
+    { "title": "Control at the crossing point", "what": "What a platform-hosted agent may reach when it crosses into your estate — tools, data, models — is gated through the AI Gateway.", "edges": [4, 5] },
+    { "title": "The user-boundary caveat", "what": "These are employee-facing platform agents, so this is a workforce story. The CIAM-adjacent concern is only at the boundary: what a platform agent may access on behalf of a user, which flows as user context on the call.", "edges": [6] }
+  ]
+}

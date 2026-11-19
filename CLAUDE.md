@@ -1,0 +1,12 @@
+# agent-privilege-guide
+
+Demo-tier standalone lab: a guided tour of the five Agent Privilege console sections (Agent Registry, Agentic Apps, Federated Identity, Self-Hosted Agents, AI Platform Agents) plus the Identity/Grant/Guardrail/Discovery mental model, with six diagram-studio diagrams and a per-claim measured/UNVERIFIED labelling. Mock-only by design — no live engine.
+
+- Run: `./scripts/run.sh` (http://127.0.0.1:7826). Test: `npm test` (server = `node --test test/*.test.js` — a **glob, never a directory**; web = vitest; packaging = `node --test scripts/*.test.mjs`). Build: `npm run build` (web first, `npm run build` runs it). Preflight: `npm run doctor`. Reset: `npm run reset`. Talk track: `npm run talk-track` (regenerates `docs/talk-track.md` from `server/src/story.js` — never edit that file by hand). Content pack: `npm run content-pack`.
+- Content lives in `server/src/story.js` (SECTIONS, MENTAL_MODEL, FACTS with measured/UNVERIFIED status, TALK_TRACK); diagrams are diagram-studio/1 documents in `server/diagrams/`, one per section plus the mental model; `doctor.js` fails on a section without a diagram, an unlabelled fact, or a non-reserved host in the story.
+- Rules that bite: **port 7826 only** (`server/src/safety.js` refuses any other; Docker publishes `127.0.0.1:7826:7826` only); **netguard** — zero real outbound calls, self-tested, asserted by a test; **mock-only** — no live mode exists, the lab contacts no console in any mode; `APG_MODE_REAL=1` only enables the rule-19 Real switch and the page keeps its simulation banner. Loopback bind, Host check, same-origin writes, only `.invalid`/`.example` hosts.
+- Rule-19 toggle shape: `POST /api/mode` takes exactly `{ source: "mock" | "real" }`; 409 + reason when Real is not enabled (`APG_MODE_REAL` unset); `GET /api/info` returns `source` and `realAvailable`. `MODE=mock` in `.env` forces the start mode. Never remove or hide the toggle.
+- Per-visitor workspaces (rule 13): `X-Workspace` header, default `default`; runs are per workspace, Reset restores that workspace only.
+- Honesty rule: facts carry `measured` / `inferred` / `UNVERIFIED`; deck-only product behaviours stay UNVERIFIED. Do not upgrade a claim without re-measuring.
+- Tests: run with globs (`test/*.test.js`, `scripts/*.test.mjs`); the compose test pins the loopback-only publish, read-only FS, non-root, `restart: unless-stopped`, and the rule-19 env pass-through.
+- No AI attribution anywhere: never a `Co-Authored-By` trailer or a "Generated with" line in commits, PRs or files.

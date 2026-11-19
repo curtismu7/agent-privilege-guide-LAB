@@ -1,0 +1,27 @@
+{
+  "demos": [
+    {
+      "id": "agent-privilege-guide",
+      "name": "Agent Privilege Field Guide",
+      "kind": "Demo",
+      "description": "Guided tour of the five PingOne Privilege Agent Privilege console sections — Agent Registry, Agentic Apps, Federated Identity, Self-Hosted Agents, AI Platform Agents — plus the Identity/Grant/Guardrail/Discovery mental model, six diagram-studio diagrams and a Workforce-vs-CIAM map. Mock-only by design; untested deck claims are labelled UNVERIFIED.",
+      "url": "http://localhost:7826",
+      "healthPath": "/api/health",
+      "composeFile": "agent-privilege-guide/docker-compose.yml",
+      "composeOverlays": [],
+      "pingProducts": [],
+      "notes": "Host-run: ./scripts/run.sh (port 7826). Mock needs no tenant and no credentials. Docker: docker compose up -d --build (published on 127.0.0.1 only). Mock-only by design: no live engine, zero outbound calls in any mode; APG_MODE_REAL=1 only enables the rule-19 Real switch. Derived from the AI-DEMO2 field guide, rewritten customer-neutral.",
+      "repo": "https://github.com/curtismu7/agent-privilege-guide-LAB",
+      "catalogId": "D134",
+      "alsoCatalogIds": [],
+      "tags": [
+        "pingone-privilege",
+        "ai-agent-security",
+        "agent-governance",
+        "agent-controls",
+        "simulated"
+      ],
+      "where": "installed"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "schema": "diagram-studio/1",
+  "id": "apg-mental-model",
+  "title": "The three layers plus discovery",
+  "lede": "Every 'it doesn't work' ticket is a mismatch between two layers: Identity (what the agent is), Grant (what it may reach), Guardrail (what screens its traffic). Discovery sits above: what agents exist that you didn't onboard yourself.",
+  "groups": {
+    "identity": { "label": "Layer 1 — Identity", "color": "blue" },
+    "grant": { "label": "Layer 2 — Grant", "color": "green" },
+    "guardrail": { "label": "Layer 3 — Guardrail", "color": "amber" },
+    "discovery": { "label": "Above the layers — Discovery", "color": "red" },
+    "callers": { "label": "The agent's call", "color": "dark" }
+  },
+  "nodes": [
+    { "id": "agent", "label": "The agent", "group": "callers", "x": 60, "y": 240, "sub": ["wants models, MCP tools or A2A agents"] },
+    { "id": "key", "label": "Agent access key", "group": "identity", "x": 300, "y": 120, "sub": ["Agent Registry", "scopes llm / mcp / a2a", "a custodian stands behind it"] },
+    { "id": "fed", "label": "Federated identity", "group": "identity", "x": 300, "y": 360, "sub": ["NonHumanIdentity", "platform-issued JWT, no secret", "k8s, CI, SPIFFE, PingFederate"] },
+    { "id": "apps", "label": "Agentic Apps", "group": "grant", "x": 560, "y": 240, "sub": ["MCP servers, A2A agents, LLM providers", "the doors a grant points at"] },
+    { "id": "grant", "label": "Grant (policy)", "group": "grant", "x": 560, "y": 60, "sub": ["auto-created by app selection on a key", "or authored: pacpolicys for federated ids", "scoped per app, per tool"] },
+    { "id": "guard", "label": "Per-key AI Guard", "group": "guardrail", "x": 800, "y": 240, "sub": ["runtime protection step", "rate limits enforced at the gateway"] },
+    { "id": "selfhosted", "label": "Self-Hosted Agents", "group": "discovery", "x": 560, "y": 480, "sub": ["sensor finds shadow agents", "attaches enforcement policies"] },
+    { "id": "platform", "label": "AI Platform Agents", "group": "discovery", "x": 800, "y": 480, "sub": ["Copilot-class platform agents", "controlled where they cross in"] },
+    { "id": "target", "label": "Model / tool / data", "group": "callers", "x": 1020, "y": 240 }
+  ],
+  "edges": [
+    { "source": "agent", "target": "key", "label": "Authorization: Bearer <key>" },
+    { "source": "agent", "target": "fed", "label": "platform JWT, no secret" },
+    { "source": "key", "target": "grant", "label": "app selection = the grant" },
+    { "source": "fed", "target": "grant", "label": "RequiredClaims gate the policy" },
+    { "source": "grant", "target": "apps", "label": "authorizes reach" },
+    { "source": "apps", "target": "guard", "label": "traffic crosses the door" },
+    { "source": "guard", "target": "target", "label": "screened call" },
+    { "source": "selfhosted", "target": "apps", "label": "discovered, then enforced", "dashed": true },
+    { "source": "platform", "target": "guard", "label": "controlled at the boundary", "dashed": true }
+  ],
+  "steps": [
+    { "title": "The agent calls", "what": "No identity, no call. The agent either presents an Agent Registry access key (Bearer, no sign-in, no token exchange) or a platform-issued JWT under Federated Identity.", "edges": [0, 1] },
+    { "title": "Identity resolves", "what": "A key carries its scopes, models, caps and custodian on itself. A federated identity pins issuer, audience, subject and required claims — and still needs a key behind it: an NHI authenticates nobody by itself.", "edges": [2, 3] },
+    { "title": "The grant scopes the reach", "what": "Selecting apps on a key IS the grant — saving auto-creates a policy. For federated identities the grant is an authored policy (pacpolicys) gated on token claims. Scoped to MCP tools, A2A agents or LLM providers/models.", "edges": [4] },
+    { "title": "The guardrail screens the call", "what": "Per-key AI Guard is a runtime protection step; rate limiting is enforced natively at the gateway. This is where prompt-injection and data-exfil controls sit.", "edges": [5, 6] },
+    { "title": "Discovery covers what you didn't onboard", "what": "Self-Hosted Agents find shadow agents in your own infrastructure and attach enforcement. AI Platform Agents control what third-party platform agents do when they cross into your estate.", "edges": [7, 8] }
+  ]
+}

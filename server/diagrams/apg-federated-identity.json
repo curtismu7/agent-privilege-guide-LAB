@@ -1,0 +1,40 @@
+{
+  "schema": "diagram-studio/1",
+  "id": "apg-federated-identity",
+  "title": "Federated Identity: the secretless agent",
+  "lede": "An external token issuer the agent authenticates against instead of holding a key: expected iss, aud bound to a specific door, subject pinning, JWKS URI, max token lifetime, required claims. Nothing to leak, rotate, or commit.",
+  "groups": {
+    "platform": { "label": "The trusted platform", "color": "dark" },
+    "nhi": { "label": "Federated Identity (NHI)", "color": "blue" },
+    "agent": { "label": "The agent", "color": "green" },
+    "gateway": { "label": "Gateway + grant", "color": "amber" },
+    "outcome": { "label": "Outcome", "color": "red" }
+  },
+  "nodes": [
+    { "id": "k8s", "label": "Kubernetes SA / CI job", "group": "platform", "x": 60, "y": 80, "sub": ["signs its own short JWT", "SPIFFE, PF-issued also work"] },
+    { "id": "jwks", "label": "JWKS URI", "group": "platform", "x": 60, "y": 240, "sub": ["public keys to verify the JWT"] },
+    { "id": "nhi", "label": "NonHumanIdentity", "group": "nhi", "x": 340, "y": 160, "sub": ["expected iss, mandatory aud", "subject pinning", "max token lifetime", "RequiredClaims"] },
+    { "id": "key", "label": "Key backed by the NHI", "group": "nhi", "x": 340, "y": 400, "sub": ["custodian = the NHI", "never also a key-level WorkloadIdentity", "(the API refuses)"] },
+    { "id": "agent", "label": "The agent", "group": "agent", "x": 620, "y": 280, "sub": ["presents the platform JWT", "zero static credentials"] },
+    { "id": "gateway", "label": "Gateway: verify + grant", "group": "gateway", "x": 850, "y": 280, "sub": ["verify iss/aud/sub/claims, lifetime", "grant gated on claims, e.g. act.sub = agent id"] },
+    { "id": "allow", "label": "Allowed", "group": "outcome", "x": 1060, "y": 200 },
+    { "id": "refuse", "label": "Refused", "group": "outcome", "x": 1060, "y": 400, "sub": ["wrong issuer/audience", "lifetime over the cap", "claims missing", "rebuilding 0 key(s): no key behind the NHI"] }
+  ],
+  "edges": [
+    { "source": "k8s", "target": "agent", "label": "platform-issued JWT" },
+    { "source": "jwks", "target": "gateway", "label": "keys to verify" },
+    { "source": "nhi", "target": "gateway", "label": "what to expect" },
+    { "source": "nhi", "target": "key", "label": "custodian" },
+    { "source": "key", "target": "gateway", "label": "the grant hangs off this" },
+    { "source": "agent", "target": "gateway", "label": "Bearer <JWT>" },
+    { "source": "gateway", "target": "allow", "label": "verified + granted" },
+    { "source": "gateway", "target": "refuse", "label": "any check fails", "dashed": true }
+  ],
+  "steps": [
+    { "title": "The platform mints the token", "what": "The agent presents a platform-issued JWT — a Kubernetes service account, a GitHub Actions OIDC token, SPIFFE, or a PingFederate-issued token. There is no secret to leak, rotate, or accidentally commit.", "edges": [0] },
+    { "title": "The NHI pins down what to trust", "what": "Expected iss, mandatory aud bound to a specific door, subject pinning, a JWKS URI, a max token lifetime (needed because self-signing workloads choose their own exp), and required claims — e.g. GitHub repository + workflow.", "edges": [2] },
+    { "title": "A key still backs the identity", "what": "An NHI does not authenticate anyone by itself: it needs a key behind it (watch the gateway log tell 'rebuilding 0 key(s)') and a grant. The key's custodian is the NHI — and you must never set both a key-level WorkloadIdentity and an NHI custodian: the API refuses.", "edges": [3, 4] },
+    { "title": "Claims gate the grant", "what": "PolicyRule.RequiredClaims gates what the token may do — for on-behalf-of flows, act.sub must equal the agent id, so the grant knows exactly which key, which repo, which human delegated.", "edges": [5] },
+    { "title": "The gateway decides", "what": "Issuer, audience, subject, claims and lifetime are all checked before the grant is applied. Any miss is a refusal, not a downgrade.", "edges": [6, 7] }
+  ]
+}
