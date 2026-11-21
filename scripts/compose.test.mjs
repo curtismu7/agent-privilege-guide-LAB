@@ -70,5 +70,5 @@ test('start mode: compose replaces the image MODE=mock with APG_MODE, empty when
 test('LAB_ALLOWED_HOSTS and SHELF_URL pass through with safe defaults', () => {
   const compose = here('docker-compose.yml');
   assert.match(compose, /LAB_ALLOWED_HOSTS: \$\{LAB_ALLOWED_HOSTS:-agent-privilege-guide\.local\.ping-devops\.com\}/);
-  assert.match(compose, /SHELF_URL: \$\{SHELF_URL:-http:\/\/127\.0\.0\.1:4400\}/);
+  assert.match(compose, /SHELF_URL: \$\{SHELF_URL:-https:\/\/local\.ping-devops\.com:8443\/demo-shelf\}/);
 });
