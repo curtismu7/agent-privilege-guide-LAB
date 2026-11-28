@@ -25,6 +25,6 @@ export const HELP_SECTIONS = [
   },
   {
     heading: "Mock and Real",
-    body: "Mock-only by design: this lab is a guided tour, not a console client. There is no live engine and no live mode — it contacts no Privilege console, no gateway and no remote service in any mode. The 'Real' switch only changes the banner's label; the content is the same simulation either way, and nothing leaves your machine."
+    body: "Mock-only by design: this lab is a guided tour, not a console client. There is no live engine and no live mode — it contacts no Privilege console, no gateway and no remote service in any mode. The 'Real' switch only changes the mode label (the MOCK or REAL modal and the header badge); the content is the same simulation either way, and nothing leaves your machine."
   }
 ];

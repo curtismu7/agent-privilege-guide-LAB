@@ -43,7 +43,7 @@ Through the shared lab-proxy: `https://local.ping-devops.com:8443/agent-privileg
 
 **Mock-only by design.** This lab is a guided tour, not a console client: there is **no live engine and no live mode**. It contacts no Privilege console, no gateway and no remote service in any mode — the netguard refuses every non-loopback socket, with a self-test and a test asserting zero attempts.
 
-What "Real" means here: with `APG_MODE_REAL=1` in the lab's own `.env`, the rule-19 header switch can report `real`, and `GET /api/info` then shows `source: "real"` — but the content is the same simulation either way (`REAL MODE` banner says so). Real is never configured by default; the switch answers 409 with the reason until you opt in, and `MODE=mock` in `.env` forces the start mode. `POST /api/mode` takes exactly `{source:"mock"|"real"}` and switches at runtime, no restart.
+What "Real" means here: with `APG_MODE_REAL=1` in the lab's own `.env`, the rule-19 header switch can report `real`, and `GET /api/info` then shows `source: "real"` — but the content is the same simulation either way (the REAL modal says so). Real is never configured by default; the switch answers 409 with the reason until you opt in, and `MODE=mock` in `.env` forces the start mode. `POST /api/mode` takes exactly `{source:"mock"|"real"}` and switches at runtime, no restart.
 
 ## API
 
@@ -57,7 +57,7 @@ Everything is text, diagrams and canned state: no console session, no API call, 
 
 ## Tabs
 
-**Mental model** (the four layers: Identity, Grant, Guardrail, plus Discovery above them), one tab per console section (**Agent Registry, Agentic Apps, Federated Identity, Self-Hosted, Platform Agents**) with its use-when / don't-use-when and Workforce-vs-CIAM card, **Diagrams** (all six, ReactFlow, movable boxes, Simulate, Reset, speed control), **Facts & Talk** (every claim with its measured/UNVERIFIED label, the talk track). Presenter mode (key `P`) and the Mock/Real toggle keep the simulation banner.
+**Mental model** (the four layers: Identity, Grant, Guardrail, plus Discovery above them), one tab per console section (**Agent Registry, Agentic Apps, Federated Identity, Self-Hosted, Platform Agents**) with its use-when / don't-use-when and Workforce-vs-CIAM card, **Diagrams** (all six, ReactFlow, movable boxes, Simulate, Reset, speed control), **Facts & Talk** (every claim with its measured/UNVERIFIED label, the talk track). The page opens on a MOCK or REAL modal that says what is simulated (once per mode per browser session).
 
 Safety: loopback bind only (plus `LAB_ALLOWED_HOSTS`), Host check, same-origin writes, netguard with self-test, bounded input, `nosniff`, non-root read-only container. See `docs/safety.md` and `docs/talk-track.md` (generated from the same data the UI reads).
 
