@@ -3,6 +3,8 @@ import TopMenu from "./top-menu/TopMenu.jsx";
 import Banner from "./components/Banner.jsx";
 import DiagramTab from "./components/DiagramTab.jsx";
 import TalkTrack from "./components/TalkTrack.jsx";
+import HelpDialog from "./help-dialog/HelpDialog.jsx";
+import { HELP_SECTIONS } from "./helpContent";
 import Compare from "./components/Compare.jsx";
 import ShelfLink from "./components/ShelfLink.jsx";
 import ReleaseNotes from "./components/ReleaseNotes.jsx";
@@ -40,6 +42,7 @@ export default function App() {
   const [resetSignal, setResetSignal] = useState(0);
   const [present, setPresent] = useState(false);
   const [talkOpen, setTalkOpen] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
   const [notesOpen, setNotesOpen] = useState(false);
   const [theme, setTheme] = useState(() => (localStorage.getItem("theme") || "auto"));
 
@@ -97,6 +100,7 @@ export default function App() {
           theme={{ value: theme, onChange: setTheme }}
           present={{ active: present, onToggle: () => setPresent((p) => !p) }}
           talkTrack={{ active: talkOpen, onToggle: () => setTalkOpen((t) => !t) }}
+          help={{ onClick: () => setHelpOpen(true), title: "What this lab is, and what is simulated" }}
           onReset={reset}
           version={info?.version ? `v${info.version}` : undefined}
           onVersion={() => setNotesOpen(true)}
@@ -132,6 +136,7 @@ export default function App() {
           <div className="panel"><h2>Talk track</h2><TalkTrack talk={story.talkTrack.map((t, i) => ({ ...t, id: i }))} /></div>
         )}
       </main>
+        <HelpDialog isOpen={helpOpen} onClose={() => setHelpOpen(false)} sections={HELP_SECTIONS} docsUrl="https://github.com/curtismu7/agent-privilege-guide-LAB#readme" />
     </div>
   );
 }
