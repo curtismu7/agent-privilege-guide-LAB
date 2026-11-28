@@ -41,8 +41,8 @@ function stubFetch({ shelfPayload, story = STORY, info } = {}) {
   });
 }
 
-beforeEach(() => { window.location.hash = ""; });
-afterEach(() => { cleanup(); });
+beforeEach(() => { window.location.hash = ""; sessionStorage.clear(); });
+afterEach(() => { cleanup(); sessionStorage.clear(); });
 
 describe("verification mark in the header", () => {
   it("shows this lab's own mark beside the Shelf link, and no other lab's", async () => {
@@ -76,14 +76,16 @@ describe("verification mark in the header", () => {
 });
 
 describe("the rule-19 Mock/Real toggle", () => {
-  it("the simulation banner renders first, above the title", async () => {
+  it("no simulation banner remains: the intro is the first thing in main, and the mode modal carries the simulation line", async () => {
     stubFetch();
     render(<App />);
     await screen.findByTestId("top-menu");
-    const banner = screen.getByTestId("sim-banner");
-    const first = document.querySelector("main").firstElementChild;
-    expect(first).toBe(screen.getByTestId("banner"));
-    expect(first.contains(banner)).toBe(true);
+    expect(screen.queryByTestId("sim-banner")).toBeNull();
+    expect(screen.queryByTestId("banner")).toBeNull();
+    expect(document.querySelector(".banner")).toBeNull();
+    expect(document.querySelector("main").firstElementChild).toHaveTextContent("i");
+    expect(document.querySelector("main").firstElementChild).toHaveClass("intro");
+    expect(screen.getByTestId("mode-modal")).toHaveTextContent(/simulated/);
   });
 
   it("Real is disabled with a how-to tooltip when realAvailable is false, and the server's 409 keeps Mock", async () => {

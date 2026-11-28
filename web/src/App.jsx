@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import TopMenu from "./top-menu/TopMenu.jsx";
-import Banner from "./components/Banner.jsx";
+import ModeModal from "./mode-modal/ModeModal.jsx";
 import DiagramTab from "./components/DiagramTab.jsx";
 import TalkTrack from "./components/TalkTrack.jsx";
 import HelpDialog from "./help-dialog/HelpDialog.jsx";
@@ -12,6 +12,13 @@ import VerifyMark from "./components/VerifyMark.jsx";
 import PatternDiagram from "./components/PatternDiagram.jsx";
 import { getJson, setMode } from "./api";
 import { workspaceId } from "./workspace";
+
+// The Real-or-mock modal's lines (it replaced the simulation banner and its REAL MODE line). Real here only means the mode switch reports real:
+// the content is the same simulation either way, and the lab has no live engine.
+export const MODE_LINES = {
+  mock: "A guided tour, not a console: everything here is simulated. Page text comes from the field guide, product behaviours it does not source are labelled UNVERIFIED, and there is no tenant, no outbound network and no credentials.",
+  real: "Real only means the mode switch reports real: this lab has no live engine and reads no live system, so the content is the same simulation. No tenant, no outbound network.",
+};
 
 const TABS = [
   { id: "mental-model", label: "Mental model" },
@@ -111,7 +118,7 @@ export default function App() {
         {notesOpen && <ReleaseNotes version={info?.version ? `v${info.version}` : ""} onClose={() => setNotesOpen(false)} />}
       </header>
       <main className="page">
-        <Banner story={story} mode={info?.mode} />
+        <p className="intro">{story.intro}</p>
         <p className="keys">Workspace {workspaceId()} · everything simulated · no tenant, no outbound network</p>
         {tab === "mental-model" && <MentalModel story={story} resetSignal={resetSignal} />}
         {tab === "compare" && <Compare story={story} />}
@@ -137,6 +144,7 @@ export default function App() {
         )}
       </main>
         <HelpDialog isOpen={helpOpen} onClose={() => setHelpOpen(false)} sections={HELP_SECTIONS} docsUrl="https://github.com/curtismu7/agent-privilege-guide-LAB#readme" />
+        <ModeModal mode={info?.mode === "real" ? "real" : "mock"} lines={MODE_LINES} storageKey="apg-mode" />
     </div>
   );
 }

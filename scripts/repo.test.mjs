@@ -77,6 +77,10 @@ test('the vendored shared components carry pin files, and the pins match the cop
   assert.equal(hash('web/src/top-menu/TopMenu.jsx'), pinValue('web/src/top-menu/top-menu.sha256'), 'TopMenu.jsx matches its pin');
   assert.equal(hash('web/src/top-menu/top-menu.css'), pinValue('web/src/top-menu/top-menu.css.sha256'), 'top-menu.css matches its pin');
   assert.equal(hash('web/src/standalone-ui.css'), pinValue('scripts/standalone-ui.sha256'), 'standalone-ui.css matches its pin');
+  // The Real-or-mock modal (shared/mode-modal in AI-DEMO-Standalone): the pin lists exactly its two files, and each copy matches byte for byte.
+  const modalPins = read('web/src/mode-modal/mode-modal.sha256').split('\n').filter((l) => l && !l.startsWith('#')).map((l) => l.split(/\s+/));
+  assert.deepEqual(modalPins.map(([, f]) => f).sort(), ['ModeModal.jsx', 'mode-modal.css']);
+  for (const [h, f] of modalPins) assert.equal(hash(`web/src/mode-modal/${f}`), h, `${f} matches mode-modal.sha256`);
 });
 
 test('customer.config.json is git-ignored, and its example only sets the four cast values', () => {
