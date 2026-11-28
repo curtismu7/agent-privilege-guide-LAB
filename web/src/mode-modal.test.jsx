@@ -73,7 +73,7 @@ describe("the Real-or-mock modal", () => {
     render(<App />);
     fireEvent.click(await screen.findByTestId("mode-modal-ok"));
     expect(screen.queryByTestId("mode-modal")).toBeNull();
-    fireEvent.click(await screen.findByTestId("mode-real"));
+    fireEvent.change(await screen.findByTestId("mode-select"), { target: { value: "real" } });
     await waitFor(() => expect(screen.getByTestId("mode-modal")).toHaveAttribute("data-mode", "real"));
   });
 });
